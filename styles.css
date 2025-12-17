@@ -1,0 +1,433 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface-hover: #252525;
+    --border: #2a2a2a;
+    --text: #ffffff;
+    --text-muted: #888888;
+    --success: #22c55e;
+    --error: #ef4444;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+/* Server Badge */
+.privacy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 30px;
+    padding: 0.6rem 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.privacy-badge svg {
+    width: 18px;
+    height: 18px;
+    color: #6366f1;
+    flex-shrink: 0;
+}
+
+.privacy-badge span {
+    font-size: 0.85rem;
+    color: #6366f1;
+    font-weight: 500;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+header h1 span {
+    color: var(--primary);
+}
+
+.tagline {
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    font-size: 1rem;
+}
+
+.converter-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+/* Upload Section */
+.dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.upload-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.drop-text {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.or-text {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.browse-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.browse-btn:hover {
+    background: var(--primary-hover);
+}
+
+/* Convert Section */
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.file-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.file-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.file-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-size {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.remove-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    background: var(--surface-hover);
+    color: var(--error);
+}
+
+.conversion-options {
+    margin-bottom: 1.5rem;
+}
+
+.format-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.format-selector label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.format-selector select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.format-selector select:hover,
+.format-selector select:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+.convert-btn {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.convert-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
+}
+
+.convert-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Download Section */
+.download-section {
+    text-align: center;
+}
+
+.success-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--success);
+    margin: 0 auto 1rem;
+}
+
+.success-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.success-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.download-btn {
+    width: 100%;
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.download-btn:hover {
+    filter: brightness(1.1);
+}
+
+.download-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.convert-another-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.convert-another-btn:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+/* Error Section */
+.error-section {
+    text-align: center;
+}
+
+.error-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--error);
+    margin: 0 auto 1rem;
+}
+
+.error-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.error-text {
+    color: var(--error);
+    margin-bottom: 1.5rem;
+}
+
+.try-again-btn {
+    background: var(--error);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.try-again-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* Supported Formats */
+.supported-formats {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.supported-formats > p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.format-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.format-tags span {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Footer */
+footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+footer p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 540px) {
+    .container {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .converter-box {
+        padding: 1.5rem;
+    }
+
+    .dropzone {
+        padding: 2rem 1rem;
+    }
+}
