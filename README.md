@@ -11,7 +11,7 @@ A comprehensive file conversion tool powered by Python. Convert between images, 
 - **Data Formats**: CSV ↔ JSON, XML ↔ JSON, YAML ↔ JSON, XLSX ↔ CSV/JSON
 - **Audio Conversions**: MP3, WAV, OGG, FLAC, AAC, M4A (requires FFmpeg)
 - **Video Conversions**: MP4, WebM, AVI, MOV, MKV, GIF (requires FFmpeg)
-- **Archive Conversions**: ZIP, TAR, TGZ, 7Z, RAR
+- **Archive Conversions**: ZIP, TAR, TAR.GZ, TGZ, 7Z
 
 ## Prerequisites
 
@@ -158,10 +158,9 @@ The server will start at `http://localhost:3000`
 ### Archives
 | Source | Target | Library |
 |--------|--------|---------|
-| ZIP | TAR, TGZ, 7Z | zipfile, tarfile, py7zr |
-| TAR, TGZ | ZIP, 7Z | tarfile, zipfile, py7zr |
-| 7Z | ZIP, TAR, TGZ | py7zr, zipfile, tarfile |
-| RAR | ZIP, TAR, TGZ, 7Z | rarfile + others |
+| ZIP | TAR, TAR.GZ, TGZ, 7Z | zipfile, tarfile, py7zr |
+| TAR, TAR.GZ, TGZ | ZIP, 7Z | tarfile, zipfile, py7zr |
+| 7Z | ZIP, TAR, TAR.GZ, TGZ | py7zr, zipfile, tarfile |
 
 ## Python Libraries Used
 
@@ -183,7 +182,6 @@ The server will start at `http://localhost:3000`
 - **pydub** - Audio processing (requires FFmpeg)
 - **moviepy** - Video processing (requires FFmpeg)
 - **py7zr** - 7Z archive handling
-- **rarfile** - RAR archive reading
 
 ## Troubleshooting
 
@@ -245,16 +243,6 @@ brew install ffmpeg
 
 # Linux:
 sudo apt install ffmpeg
-```
-
-### RAR extraction not working
-RAR extraction requires the `unrar` tool:
-```bash
-# Windows: Download UnRAR from https://www.rarlab.com/rar_add.htm
-# macOS:
-brew install unrar
-# Linux:
-sudo apt install unrar
 ```
 
 ## API Endpoints

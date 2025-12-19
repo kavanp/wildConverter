@@ -1,0 +1,42 @@
+# WildConverter Ingress
+# Exposes the application externally via AWS ALB
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wildconverter-ingress
+  namespace: wildconverter
+  annotations:
+    # AWS ALB Ingress Controller
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    # Timeouts for large file conversions (5 minutes)
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=300
+    # Health check settings
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "10"
+    alb.ingress.kubernetes.io/healthy-threshold-count: "2"
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: "3"
+    # Tags for AWS resources
+    alb.ingress.kubernetes.io/tags: Environment=production,Application=wildconverter
+    # SSL/HTTPS Configuration
+    # TODO: Replace YOUR-CERT-ARN with your ACM certificate ARN
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:762313885910:certificate/1d1bb0cc-3356-4b2c-9fcd-819df5b795c2
+spec:
+  ingressClassName: alb
+  rules:
+    # TODO: Replace wildconverter.yourdomain.com with your actual domain
+    - host: wildconverter.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wildconverter-service
+                port:
+                  number: 80

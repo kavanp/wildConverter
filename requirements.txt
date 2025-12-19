@@ -40,7 +40,6 @@ moviepy==1.0.3
 
 # Archive Processing (built into Python, but these add more formats)
 py7zr==0.20.8
-rarfile==4.1
 patool==2.0.0
 
 # File Type Detection

@@ -51,7 +51,6 @@ from moviepy.editor import VideoFileClip, AudioFileClip
 import zipfile
 import tarfile
 import py7zr
-import rarfile
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
@@ -67,11 +66,17 @@ DOCUMENT_FORMATS = ['pdf', 'docx', 'doc', 'txt', 'html', 'md', 'rtf']
 DATA_FORMATS = ['csv', 'json', 'xml', 'yaml', 'yml', 'xlsx', 'xls']
 AUDIO_FORMATS = ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a', 'wma']
 VIDEO_FORMATS = ['mp4', 'webm', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'gif']
-ARCHIVE_FORMATS = ['zip', 'tar', 'gz', 'tgz', '7z', 'rar']
+ARCHIVE_FORMATS = ['zip', 'tar', 'tar.gz', 'tgz', '7z']
 
 
 def get_file_extension(filename):
-    """Get lowercase file extension."""
+    """Get lowercase file extension, handling compound extensions like .tar.gz"""
+    filename_lower = filename.lower()
+    # Check for compound extensions first
+    if filename_lower.endswith('.tar.gz'):
+        return 'tar.gz'
+    if filename_lower.endswith('.tar.bz2'):
+        return 'tar.bz2'
     return Path(filename).suffix.lower().lstrip('.')
 
 
@@ -695,7 +700,9 @@ def video_to_gif(input_buffer, input_format):
 
 def extract_archive(input_buffer, input_format):
     """Extract archive to a temporary directory and return file list."""
-    with tempfile.NamedTemporaryFile(suffix=f'.{input_format}', delete=False) as temp_in:
+    # Handle compound extensions for temp file suffix
+    suffix = '.tar.gz' if input_format == 'tar.gz' else f'.{input_format}'
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_in:
         temp_in.write(input_buffer)
         temp_in_path = temp_in.name
 
@@ -705,16 +712,15 @@ def extract_archive(input_buffer, input_format):
         if input_format == 'zip':
             with zipfile.ZipFile(temp_in_path, 'r') as zf:
                 zf.extractall(extract_dir)
-        elif input_format in ['tar', 'tgz', 'gz']:
-            mode = 'r:gz' if input_format in ['tgz', 'gz'] else 'r'
-            with tarfile.open(temp_in_path, mode) as tf:
+        elif input_format == 'tar':
+            with tarfile.open(temp_in_path, 'r') as tf:
+                tf.extractall(extract_dir)
+        elif input_format in ['tar.gz', 'tgz']:
+            with tarfile.open(temp_in_path, 'r:gz') as tf:
                 tf.extractall(extract_dir)
         elif input_format == '7z':
             with py7zr.SevenZipFile(temp_in_path, 'r') as sz:
                 sz.extractall(extract_dir)
-        elif input_format == 'rar':
-            with rarfile.RarFile(temp_in_path, 'r') as rf:
-                rf.extractall(extract_dir)
         else:
             raise ValueError(f"Unsupported archive format: {input_format}")
 
@@ -730,6 +736,7 @@ def extract_archive(input_buffer, input_format):
 
 def create_archive(source_dir, output_format):
     """Create archive from directory."""
+    import subprocess
     output = io.BytesIO()
 
     if output_format == 'zip':
@@ -739,14 +746,32 @@ def create_archive(source_dir, output_format):
                     file_path = os.path.join(root, file)
                     arc_name = os.path.relpath(file_path, source_dir)
                     zf.write(file_path, arc_name)
-    elif output_format in ['tar', 'tgz', 'gz']:
-        # For tar formats, we need to write to a temp file first
-        with tempfile.NamedTemporaryFile(suffix=f'.{output_format}', delete=False) as temp_out:
+    elif output_format == 'tar':
+        # Plain tar (no compression)
+        with tempfile.NamedTemporaryFile(suffix='.tar', delete=False) as temp_out:
             temp_out_path = temp_out.name
 
         try:
-            mode = 'w:gz' if output_format in ['tgz', 'gz'] else 'w'
-            with tarfile.open(temp_out_path, mode) as tf:
+            with tarfile.open(temp_out_path, 'w') as tf:
+                for root, dirs, files in os.walk(source_dir):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        arc_name = os.path.relpath(file_path, source_dir)
+                        tf.add(file_path, arc_name)
+
+            with open(temp_out_path, 'rb') as f:
+                output.write(f.read())
+        finally:
+            if os.path.exists(temp_out_path):
+                os.unlink(temp_out_path)
+    elif output_format in ['tar.gz', 'tgz']:
+        # Gzipped tar
+        suffix = '.tar.gz' if output_format == 'tar.gz' else '.tgz'
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as temp_out:
+            temp_out_path = temp_out.name
+
+        try:
+            with tarfile.open(temp_out_path, 'w:gz') as tf:
                 for root, dirs, files in os.walk(source_dir):
                     for file in files:
                         file_path = os.path.join(root, file)
@@ -984,10 +1009,9 @@ def get_mime_type(format):
         # Archive formats
         'zip': 'application/zip',
         'tar': 'application/x-tar',
-        'gz': 'application/gzip',
+        'tar.gz': 'application/gzip',
         'tgz': 'application/gzip',
         '7z': 'application/x-7z-compressed',
-        'rar': 'application/vnd.rar',
     }
     return mime_types.get(format.lower(), 'application/octet-stream')
 
@@ -1084,7 +1108,7 @@ if __name__ == '__main__':
 ║   • Audio: MP3, WAV, OGG, FLAC, AAC, M4A ↔ Any               ║
 ║   • Video: MP4, WebM, AVI, MOV, MKV ↔ Any                     ║
 ║   • Video → Audio (extract), Video → GIF                      ║
-║   • Archives: ZIP, TAR, 7Z, RAR ↔ ZIP, TAR, 7Z               ║
+║   • Archives: ZIP, TAR, TAR.GZ, 7Z ↔ Any                     ║
 ║                                                                ║
 ║   Note: Audio/Video require FFmpeg installed on system        ║
 ║                                                                ║

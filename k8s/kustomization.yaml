@@ -1,0 +1,23 @@
+# Kustomization file for WildConverter
+# Deploy with: kubectl apply -k .
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: wildconverter
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - hpa.yaml
+
+commonLabels:
+  app: wildconverter
+  managed-by: kustomize
+
+images:
+  - name: 762313885910.dkr.ecr.us-east-1.amazonaws.com/wildconverter
+    newTag: latest

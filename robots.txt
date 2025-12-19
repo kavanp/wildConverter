@@ -1,0 +1,11 @@
+# WildConverter Robots.txt
+# https://wildconverter.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://wildconverter.com/sitemap.xml
+
+# Crawl-delay (optional - be nice to the server)
+Crawl-delay: 1

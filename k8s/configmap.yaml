@@ -1,0 +1,14 @@
+# WildConverter ConfigMap
+# Application configuration (non-sensitive values)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wildconverter-config
+  namespace: wildconverter
+  labels:
+    app: wildconverter
+data:
+  FLASK_ENV: "production"
+  PYTHONUNBUFFERED: "1"
+  MAX_CONTENT_LENGTH: "52428800"  # 50MB in bytes

@@ -58,14 +58,12 @@ const conversionMap = {
     'video/x-matroska': ['mp4', 'webm', 'avi', 'mov', 'gif', 'mp3', 'wav'],
 
     // Archive Formats
-    'application/zip': ['tar', 'tgz', '7z'],
-    'application/x-zip-compressed': ['tar', 'tgz', '7z'],
-    'application/x-tar': ['zip', 'tgz', '7z'],
+    'application/zip': ['tar', 'tar.gz', 'tgz', '7z'],
+    'application/x-zip-compressed': ['tar', 'tar.gz', 'tgz', '7z'],
+    'application/x-tar': ['zip', 'tar.gz', 'tgz', '7z'],
     'application/gzip': ['zip', 'tar', '7z'],
     'application/x-gzip': ['zip', 'tar', '7z'],
-    'application/x-7z-compressed': ['zip', 'tar', 'tgz'],
-    'application/vnd.rar': ['zip', 'tar', 'tgz', '7z'],
-    'application/x-rar-compressed': ['zip', 'tar', 'tgz', '7z'],
+    'application/x-7z-compressed': ['zip', 'tar', 'tar.gz', 'tgz'],
 };
 
 // Format icons mapping
@@ -111,10 +109,9 @@ const formatIcons = {
     // Archives
     'zip': '📦',
     'tar': '📦',
+    'tar.gz': '📦',
     'tgz': '📦',
-    'gz': '📦',
     '7z': '📦',
-    'rar': '📦',
 };
 
 // Extension to MIME type mapping
@@ -162,10 +159,9 @@ const extToMime = {
     // Archives
     'zip': 'application/zip',
     'tar': 'application/x-tar',
-    'gz': 'application/gzip',
+    'tar.gz': 'application/gzip',
     'tgz': 'application/gzip',
     '7z': 'application/x-7z-compressed',
-    'rar': 'application/vnd.rar',
 };
 
 // State
@@ -232,6 +228,16 @@ outputFormat.addEventListener('change', () => {
     convertBtn.disabled = !outputFormat.value;
 });
 
+// Helper function to get file extension (handles compound extensions like .tar.gz)
+function getFileExtension(filename) {
+    const lowerName = filename.toLowerCase();
+    // Check for compound extensions first
+    if (lowerName.endsWith('.tar.gz')) return 'tar.gz';
+    if (lowerName.endsWith('.tar.bz2')) return 'tar.bz2';
+    // Fall back to simple extension
+    return filename.split('.').pop().toLowerCase();
+}
+
 // Functions
 function handleFile(file) {
     currentFile = file;
@@ -243,7 +249,7 @@ function handleFile(file) {
 
     // Fallback to extension if MIME type is not detected
     if (!mimeType || !conversionMap[mimeType]) {
-        const ext = file.name.split('.').pop().toLowerCase();
+        const ext = getFileExtension(file.name);
         mimeType = extToMime[ext] || mimeType;
     }
 

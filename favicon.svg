@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="url(#grad)"/>
+  <!-- Conversion arrows - stylized W shape that also looks like arrows -->
+  <path d="M8 11 L11 20 L16 14 L21 20 L24 11"
+        fill="none"
+        stroke="white"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+  <!-- Small arrow indicator -->
+  <path d="M22 8 L24 11 L21 11"
+        fill="white"
+        stroke="white"
+        stroke-width="0.5"
+        stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,10 @@
+# WildConverter Namespace
+# Creates an isolated namespace for all WildConverter resources
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wildconverter
+  labels:
+    app: wildconverter
+    environment: production
