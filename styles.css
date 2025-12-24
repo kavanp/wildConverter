@@ -437,7 +437,15 @@ header h1 span {
 
 .features-section h2 {
     font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-intro {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
     margin-bottom: 1.5rem;
+    max-width: 100%;
 }
 
 .features-grid {

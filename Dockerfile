@@ -53,6 +53,10 @@ COPY robots.txt .
 COPY sitemap.xml .
 COPY google4a103e369768567c.html .
 COPY privacy.html .
+COPY about.html .
+COPY contact.html .
+COPY faq.html .
+COPY ads.txt .
 
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser && \
